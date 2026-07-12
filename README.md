@@ -1,4 +1,4 @@
-# From-grains-of-sand-to-neuronal-avalanches
+# From grains of sand to neuronal avalanches
 
 ### Reproducing papers of Self-Organized Criticality
 
@@ -64,81 +64,97 @@ The sandpile model is the canonical example.
 
 # 2. Bak-Tang-Wiesenfeld Sandpile Model
 
-The first part of this project reproduces the classical 1987 model proposed by
+The first part of this project reproduces the seminal **Bak-Tang-Wiesenfeld (1987)** model, the first mathematical model to demonstrate **Self-Organized Criticality (SOC)**.
 
-> Bak, Tang & Wiesenfeld
+The model consists of a square lattice where each cell stores an integer number of sand grains. At every iteration, a new grain is added to the system. Whenever the number of grains at a site exceeds a critical threshold, that site becomes unstable and topples, redistributing grains to its four nearest neighbors.
 
-A lattice stores grains of sand.
+Although the local rule is remarkably simple, repeated grain addition drives the entire system toward a critical state where events of all sizes naturally emerge.
 
-Whenever a cell accumulates more than a threshold number of grains, it topples, redistributing grains to neighboring cells.
-
-Those neighbors may also become unstable, generating an avalanche.
-
-Despite the simplicity of these local rules, the system self-organizes into a critical state.
+Unlike classical critical phenomena, no external parameter needs to be tuned. Criticality appears spontaneously as a consequence of the system dynamics.
 
 ---
 
-## Local Dynamics
+# Local Dynamics
 
-The intuition behind the model can be illustrated using a small **20×20 lattice**.
+The simplest way to understand the model is to imagine continuously pouring sand onto the top of a real sandpile.
 
-Grains of sand are repeatedly dropped onto the center of the lattice, just as one would continuously pour sand onto the top of a real sandpile. At first, the pile simply grows. Once the central site reaches the critical height, it becomes unstable and topples, redistributing grains to its four nearest neighbors.
+At first, the pile simply grows. As more grains accumulate at the center, the local slope increases until it becomes unstable. A small portion of the pile collapses, redistributing sand to neighboring regions.
 
-Initially, avalanches remain localized around the center, where the sand is continuously added. As more grains accumulate over time, neighboring sites also approach the critical threshold, allowing avalanches to spread farther from the center and involve increasingly larger regions of the lattice.
+The computational model reproduces exactly this intuition.
+
+To illustrate this process, grains are repeatedly deposited onto the central cell of a **20×20 lattice**.
+
+Initially, avalanches remain localized near the deposition site. As neighboring cells gradually approach the critical threshold, the activity spreads outward, producing increasingly larger cascades.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/d2ffe3e3-017a-4dbd-84e4-8de006ba01eb"
-       alt="20×20 Sandpile simulation"
-       width="550">
+<img src="figures/abelian_fractal_20x20.gif" width="550">
 </p>
 
 <p align="center">
-<i>Figure 1. Grains are continuously added to the central cell of a 20×20 lattice. Early avalanches remain confined near the deposition site, but as the sandpile grows, activity spreads outward, producing larger cascades that propagate through the lattice.</i>
+<i>Figure 1. Sand grains are continuously added to the central cell of a 20×20 lattice. Early avalanches remain confined near the center, while progressively larger cascades emerge as the pile grows.</i>
 </p>
 
-This simple visualization mirrors the behavior of a real sandpile: as sand is continuously poured onto the top, small local collapses occur first, while larger avalanches gradually emerge and reshape the entire pile.
+This visualization captures the essential mechanism behind Self-Organized Criticality: simple local interactions generate complex collective behavior without centralized control.
 
 ---
 
-## Large-Scale Dynamics
+# Emergence of Scale-Free Avalanches
 
-After understanding the local mechanism, the simulation is extended to a **50×50 lattice**, initialized following the conditions described in the original paper.
+Once the local dynamics become established, the system evolves toward a stationary state where avalanches occur continuously across multiple spatial scales.
 
-Now, avalanches of different sizes naturally emerge.
+Most avalanches involve only a few lattice sites, while a much smaller number propagate through large portions of the system.
+
+Importantly, there is no characteristic avalanche size.
+
+This absence of a preferred scale is one of the defining signatures of Self-Organized Criticality.
+
+The following figures reproduce the avalanche statistics measured from the **20×20 simulation**.
 
 <p align="center">
-<img src="figures/bak/50x50.gif" width="500">
+<img src="figures/20x20x20_Dt.png" width="31%">
+<img src="figures/20x20x20_Ds.png" width="31%">
+<img src="figures/20x20x20_Df.png" width="31%">
 </p>
-
-Most avalanches involve only a few cells, while a small number propagate through almost the entire system.
-
-This absence of a characteristic avalanche size is one of the hallmarks of Self-Organized Criticality.
-
----
-
-# 3. Avalanche Statistics
-
-The avalanche size distribution follows an approximate power law.
-
-Small avalanches occur frequently.
-
-Large avalanches are rare but possible.
-
-This scale-free behavior indicates that no characteristic avalanche size dominates the dynamics.
 
 <p align="center">
-<img src="figures/bak/powerlaw.png" width="500">
+<i>Figure 2. Avalanche duration (left), avalanche size (center), and fractal dimension (right) obtained from the 20×20 simulation.</i>
 </p>
 
----
-
-# 4. Reproducing the Original Results
-
-The simulations reproduce the qualitative behavior reported in the original article.
-
-The resulting distributions exhibit clear scale-free behavior in both two-dimensional and three-dimensional systems.
+Although the system is relatively small, the distributions already exhibit the broad variability expected from critical systems.
 
 ---
+
+# Large-Scale Dynamics
+
+To reduce finite-size effects and better reproduce the original publication, the lattice size was increased to **50×50**, following the initialization procedure described in the original paper.
+
+The larger system reveals a much richer dynamical behavior.
+
+Small avalanches remain the most common events, while occasional large cascades propagate through nearly the entire lattice.
+
+<p align="center">
+<img src="figures/abelian_sand_50x50.gif" width="600">
+</p>
+
+<p align="center">
+<i>Figure 3. Avalanche dynamics in a 50×50 lattice. Increasing system size allows larger cascades to emerge while preserving the same local interaction rules.</i>
+</p>
+
+As expected, increasing the lattice size makes the scale-free behavior more evident.
+
+The corresponding avalanche statistics are shown below.
+
+<p align="center">
+<img src="figures/50x50_Dt.png" width="31%">
+<img src="figures/50x50_Ds.png" width="31%">
+<img src="figures/50x50_Sf.png" width="31%">
+</p>
+
+<p align="center">
+<i>Figure 4. Avalanche duration (left), avalanche size (center), and fractal dimension (right) measured from the 50×50 simulation.</i>
+</p>
+
+Compared to the smaller lattice, the scaling region extends over a wider range, illustrating how finite-size effects influence the estimation of critical exponents.
 
 ## Discussion
 
