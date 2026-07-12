@@ -133,7 +133,7 @@ The larger system reveals a much richer dynamical behavior.
 Small avalanches remain the most common events, while occasional large cascades propagate through nearly the entire lattice.
 
 <p align="center">
-<img src="figures/abelian_sand_50x50.gif" width="600">
+<img src="figures/sand_50x50.gif" width="600">
 </p>
 
 <p align="center">
