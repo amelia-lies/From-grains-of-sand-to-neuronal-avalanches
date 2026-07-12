@@ -57,7 +57,7 @@ Slow accumulation and fast relaxation allow the system to alternate between peri
 
 ## 1. The Bak-Tang-Wiesenfeld sandpile
 
-This 1987 paper wasn't primarily about sandpiles — it was an attempt to explain the ubiquity of **1/f noise**, the puzzling power-law power spectrum observed in everything from resistors to the flow of the Nile. Sand is just the clearest way to make the argument concrete.
+This 1987 paper wasn't primarily about sandpiles, it was an attempt to explain the ubiquity of **1/f noise**, the puzzling power-law power spectrum observed in everything from resistors to the flow of the Nile. Sand is just the clearest way to make the argument concrete.
 
 The paper actually starts with a simpler picture: a 1D chain of damped pendula connected by torsion springs. Kicking one pendulum can trigger a chain reaction through its neighbors, and the authors show that in one dimension this settles into a trivial, stable configuration. In two or more dimensions, though, something different happens. No configuration is stable against all small perturbations, so the system is forced to keep evolving, and it does so until perturbations can propagate across every length scale simultaneously. That state, with no characteristic scale left, is the critical point.
 
