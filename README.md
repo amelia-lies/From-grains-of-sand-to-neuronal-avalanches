@@ -263,7 +263,7 @@ The reproduced simulations recover the three dynamical regimes described in the 
 By varying the maximum synaptic strength parameter (α), the avalanche distribution transitions from exponential behavior to scale-free dynamics and eventually to system-wide avalanches.
 
 <p align="center">
-<img src="figures/levina/avalanches.png" width="500">
+<img src="figures/alphas_levina.png" width="500">
 </p>
 
 ---
