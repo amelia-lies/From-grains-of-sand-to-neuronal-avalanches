@@ -4,7 +4,7 @@
 
 > *How can simple local interactions generate complex behavior without external tuning?*
 
-This repository reproduces two papers on **Self-Organized Criticality (SOC)**. One introducing the original sandpile model, which builds the central intuition behind SOC **(Bak, Tang & Wiesenfeld, 1987)**, and another showing how the same ideas can be extended in a neural setting, showing how similar dynamics can emerge from biologically motivated mechanisms **(Levina, Herrmann & Geisel, 2007)**. 
+This repository reproduces two papers on SOC. One introducing the original sandpile model, which builds the central intuition behind SOC **(Bak, Tang & Wiesenfeld, 1987)**, and another showing how the same ideas can be extended in a neural setting, showing how similar dynamics can emerge from biologically motivated mechanisms **(Levina, Herrmann & Geisel, 2007)**. 
 
 ---
 
@@ -24,7 +24,7 @@ This repository reproduces two papers on **Self-Organized Criticality (SOC)**. O
 
 ## The general mechanism behind SOC
 
-Before looking at either paper individually, it helps to name the mechanism both of them share. Strip away the sand grains and the neurons, and every SOC system reduces to the same four-step loop:
+This is the single idea both systems explored in this repository are built on:
 
 ```
 Slow, continuous drive
@@ -52,13 +52,11 @@ Slow, continuous drive
                  accumulation phase —
                  no external tuning required
 ```
+Two features are central to this behavior:
 
-Two ingredients make this loop produce criticality instead of just noise:
+1. **Separated timescales.** Slow accumulation and fast relaxation allow the system to alternate between periods of gradual buildup and sudden avalanches. This creates events spanning a broad range of sizes rather than a single characteristic scale.
 
-1. **Separation of timescales.** The drive is slow; the relaxation is fast. This is what lets the system spend almost all its time quietly accumulating, and only rarely, but at every possible scale, releasing what it accumulated.
-2. **A threshold-triggered instability, not a tuned one.** The system doesn't need to be pushed to a precise critical value from the outside. Accumulation *itself* keeps nudging the system towards its own threshold, over and over, so criticality becomes an attractor rather than a fine-tuned coincidence.
-
-This is the single idea both papers reproduced here are built on. BTW instantiates it with sand and gravity. Levina et al. instantiate it with membrane potentials and synaptic resources. The rest of this README is really just about how each system fills in these four boxes.
+2. **Avalanches across multiple scales.** Once a local instability occurs, its effects can propagate through neighboring elements in a domino-like process, producing cascades that range from small local events to large system-wide reorganizations. Because these avalanches can occur at many different scales, the resulting fluctuations follow power-law distributions rather than having a characteristic size.
 
 ---
 
@@ -66,7 +64,7 @@ This is the single idea both papers reproduced here are built on. BTW instantiat
 
 This 1987 paper wasn't primarily about sandpiles — it was an attempt to explain the ubiquity of **1/f noise**, the puzzling power-law power spectrum observed in everything from resistors to the flow of the Nile. Sand is just the clearest way to make the argument concrete.
 
-The paper actually starts with a simpler picture: a 1D chain of damped pendula connected by torsion springs. Kicking one pendulum can trigger a chain reaction through its neighbors, and the authors show that in one dimension this settles into a trivial, stable configuration. In two or more dimensions, though, something different happens: no configuration is stable against *all* small perturbations, so the system is forced to keep evolving — and it does so until perturbations can propagate across every length scale simultaneously. That state, with no characteristic scale left, is the critical point.
+The paper actually starts with a simpler picture: a 1D chain of damped pendula connected by torsion springs. Kicking one pendulum can trigger a chain reaction through its neighbors, and the authors show that in one dimension this settles into a trivial, stable configuration. In two or more dimensions, though, something different happens. No configuration is stable against all small perturbations, so the system is forced to keep evolving, and it does so until perturbations can propagate across every length scale simultaneously. That state, with no characteristic scale left, is the critical point.
 
 The cellular-automaton version used for simulation keeps the same physics with an integer height variable `z(x,y)` on a lattice:
 
@@ -75,51 +73,38 @@ The cellular-automaton version used for simulation keeps the same physics with a
 - Toppling can trigger further toppling in neighboring cells — an avalanche.
 - The process is *locally conservative*: grains aren't created or destroyed, only moved, except at the open boundaries where they leave the system.
 
-Mapping this onto the general loop above: the **slow drive** is grain-by-grain addition; the **local accumulation** is the height at each site; the **threshold instability** is the toppling condition `z > K`; and the **fast relaxation** is the avalanche of topplings that follows, redistributing height until every site is locally stable again. Because there's no free parameter to tune — the threshold `K` only sets a scale, not a special value — the system organizes itself into criticality purely as a byproduct of being driven slowly and relaxing locally.
+Mapping this onto the general loop above: the **slow drive** is grain-by-grain addition; the **local accumulation** is the height at each site; the **threshold instability** is the toppling condition `z > K`; and the **fast relaxation** is the avalanche of topplings that follows, redistributing height until every site is locally stable again. The threshold `K` only sets a scale, so there's no free parameter to tune. The system organizes itself into criticality purely as a byproduct of being driven slowly and relaxing locally.
 
 ---
-
 ## 2. Reproducing the sandpile
 
-### Local dynamics
+### Building intuition: the emergence of avalanches
 
-To build intuition before looking at statistics, grains are repeatedly dropped onto the central cell of a **20×20 lattice**.
+To build intuition for the dynamics, grains are repeatedly dropped onto the central cell of an initially empty **20×20 lattice**.
 
 <p align="center">
 <img src="figures/abelian_fractal_20x20.gif" width="550">
 </p>
 
 <p align="center">
-<i>Figure 1. Grains are continuously added to the central cell of a 20×20 lattice. Early avalanches stay confined near the center; as neighboring cells are pushed closer to threshold by repeated toppling, cascades start reaching further out.</i>
+<i>Figure 1. Grains are continuously added to the central cell of an initially empty 20×20 lattice. As grains accumulate and neighboring sites approach their threshold, cascades progressively spread to larger regions of the lattice.</i>
 </p>
 
-What this animation is really showing is the accumulation phase feeding the instability phase in real time: each small avalanche leaves the surrounding cells slightly closer to their own threshold, so the *next* perturbation tends to travel a bit further than the last one — until the system has organized a scale-free structure of "almost critical" sites.
+Starting from a completely stable state, the system gradually builds up height around the driven region. Early perturbations produce small, local rearrangements, but each avalanche redistributes grains and leaves nearby sites closer to instability. As the accumulated structure expands, a small addition can trigger cascades that travel increasingly farther through the lattice. 
 
-### Emergence of scale-free avalanches (20×20)
+### Large-scale dynamics and avalanche statistics (50×50)
 
-Once the lattice reaches its stationary regime, avalanches of every size coexist: most are small, a few sweep across large portions of the grid, and there's no size that's more "typical" than another.
-
-<p align="center">
-<img src="figures/20x20x20_Dt.png" width="31%">
-<img src="figures/20x20x20_Ds.png" width="31%">
-<img src="figures/20x20x20_Df.png" width="31%">
-</p>
-
-<p align="center">
-<i>Figure 2. Avalanche duration (left), avalanche size (center), and fractal dimension (right) from the 20×20 simulation. Even at this modest system size, the distributions already span a broad range with no obvious characteristic scale.</i>
-</p>
-
-### Large-scale dynamics (50×50)
-
-To reduce finite-size effects and get closer to the conditions in the original paper, the lattice was scaled up to **50×50**.
+To study the scaling behavior described in the original paper, the lattice was increased to **50×50**. A larger system size allows avalanches to develop over a wider range of spatial and temporal scales.
 
 <p align="center">
 <img src="figures/sand_50x50.gif" width="600">
 </p>
 
 <p align="center">
-<i>Figure 3. Avalanche dynamics on a 50×50 lattice. The local toppling rule is unchanged, only the system size grows, yet this alone is enough for much larger cascades to appear.</i>
+<i>Figure 2. Avalanche dynamics on a 50×50 lattice. </i>
 </p>
+
+Once the system reaches its stationary regime, avalanche statistics are collected and compared with the scaling laws reported by Bak, Tang & Wiesenfeld. The absence of a characteristic avalanche size is reflected in the approximate power-law distributions of avalanche size, duration, and fractal dimension.
 
 <p align="center">
 <img src="figures/50x50_Dt.png" width="31%">
@@ -128,22 +113,8 @@ To reduce finite-size effects and get closer to the conditions in the original p
 </p>
 
 <p align="center">
-<i>Figure 4. Avalanche duration (left), size (center), and fractal dimension (right) for the 50×50 lattice. The scaling region is visibly wider than in the 20×20 case.</i>
+<i>Figure 3. Avalanche duration (left), size (center), and fractal dimension (right) for the 50×50 lattice. The broad scaling regions reflect the coexistence of avalanches across multiple spatial and temporal scales.</i>
 </p>
-
-### Comparing to the original numbers
-
-The original paper reports a cluster-size exponent of `τ ≈ 0.98` for a 50×50 lattice and `τ ≈ 1.35` for a 20×20×20 volume, and lifetime-distribution exponents of `α ≈ 0.42` (2D) and `α ≈ 0.90` (3D). Those lifetime exponents matter beyond the sandpile itself: through the relation the authors derive between avalanche lifetimes and the noise power spectrum, `α ≈ 0.42` corresponds to a spectrum close to `f^-1.58` — i.e., close to the 1/f behavior the whole paper set out to explain in the first place. That's the real payoff of the model: a lattice of falling sand producing, as a side effect, the same kind of power-law noise spectrum seen in completely unrelated physical systems.
-
-My fitted exponents differ somewhat from these reference values. A few things plausibly contribute:
-
-- finite-size effects (my largest lattice is still small next to what dedicated SOC studies use),
-- how the transient before stationarity is discarded,
-- the fitting window chosen for the power-law region,
-- boundary conditions and initialization.
-
-Getting a different exponent isn't the same as failing to reproduce the phenomenon — the qualitative signature (a wide power-law region, extending with system size, with no natural scale) is present in every run. If anything, the sensitivity of the exponent to these details is itself one of the more honest lessons of working with SOC models: estimating a power-law exponent well is a statistics problem as much as a physics one. Natural next steps would be maximum-likelihood exponent fitting, Kolmogorov–Smirnov goodness-of-fit tests against alternative distributions, and an explicit finite-size scaling analysis instead of single-size fits.
-
 ---
 
 ## 3. From sandpiles to the brain
