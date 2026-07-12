@@ -49,14 +49,9 @@ Slow, continuous drive
               └──────────────┐
                               ▼
                  System re-enters the slow
-                 accumulation phase —
-                 no external tuning required
+                 accumulation phase 
 ```
-Two features are central to this behavior:
-
-1. **Separated timescales.** Slow accumulation and fast relaxation allow the system to alternate between periods of gradual buildup and sudden avalanches. This creates events spanning a broad range of sizes rather than a single characteristic scale.
-
-2. **Avalanches across multiple scales.** Once a local instability occurs, its effects can propagate through neighboring elements in a domino-like process, producing cascades that range from small local events to large system-wide reorganizations. Because these avalanches can occur at many different scales, the resulting fluctuations follow power-law distributions rather than having a characteristic size.
+Slow accumulation and fast relaxation allow the system to alternate between periods of gradual buildup and sudden avalanches. This creates events spanning a broad range of sizes rather than a single characteristic scale.
 
 ---
 
