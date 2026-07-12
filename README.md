@@ -1,15 +1,10 @@
 # From Grains of Sand to Neuronal Avalanches
 
-### Reproducing two papers on Self-Organized Criticality
+### Reproducing two papers on Self-Organized Criticality (SOC)
 
 > *How can simple local interactions generate complex behavior without external tuning?*
 
-This repository reproduces two landmark papers in the study of **Self-Organized Criticality (SOC)**:
-
-- **Bak, Tang & Wiesenfeld (1987)** — the original sandpile model, and the paper that introduced SOC as an explanation for 1/f noise.
-- **Levina, Herrmann & Geisel (2007)** — a spiking neural network that shows the same SOC mechanism can emerge from activity-dependent synapses, without any parameter fine-tuning.
-
-At first glance these two systems have almost nothing in common: one moves grains of sand on a lattice, the other integrates and fires spikes in a network of neurons. What connects them is not their implementation but their underlying **logic** — a logic this README tries to make explicit before diving into either model.
+This repository reproduces two papers on **Self-Organized Criticality (SOC)**. One introducing the original sandpile model, which builds the central intuition behind SOC **(Bak, Tang & Wiesenfeld, 1987)**, and another showing how the same ideas can be extended in a neural setting, showing how similar dynamics can emerge from biologically motivated mechanisms **(Levina, Herrmann & Geisel, 2007)**. 
 
 ---
 
@@ -60,7 +55,7 @@ Slow, continuous drive
 
 Two ingredients make this loop produce criticality instead of just noise:
 
-1. **Separation of timescales.** The drive is slow; the relaxation is fast. This is what lets the system spend almost all its time quietly accumulating, and only rarely — but at every possible scale — releasing what it accumulated.
+1. **Separation of timescales.** The drive is slow; the relaxation is fast. This is what lets the system spend almost all its time quietly accumulating, and only rarely, but at every possible scale, releasing what it accumulated.
 2. **A threshold-triggered instability, not a tuned one.** The system doesn't need to be pushed to a precise critical value from the outside. Accumulation *itself* keeps nudging the system towards its own threshold, over and over, so criticality becomes an attractor rather than a fine-tuned coincidence.
 
 This is the single idea both papers reproduced here are built on. BTW instantiates it with sand and gravity. Levina et al. instantiate it with membrane potentials and synaptic resources. The rest of this README is really just about how each system fills in these four boxes.
@@ -69,7 +64,7 @@ This is the single idea both papers reproduced here are built on. BTW instantiat
 
 ## 1. The Bak-Tang-Wiesenfeld sandpile
 
-BTW's 1987 paper wasn't primarily about sandpiles — it was an attempt to explain the ubiquity of **1/f noise**, the puzzling power-law power spectrum observed in everything from resistors to the flow of the Nile. Sand is just the clearest way to make the argument concrete.
+This 1987 paper wasn't primarily about sandpiles — it was an attempt to explain the ubiquity of **1/f noise**, the puzzling power-law power spectrum observed in everything from resistors to the flow of the Nile. Sand is just the clearest way to make the argument concrete.
 
 The paper actually starts with a simpler picture: a 1D chain of damped pendula connected by torsion springs. Kicking one pendulum can trigger a chain reaction through its neighbors, and the authors show that in one dimension this settles into a trivial, stable configuration. In two or more dimensions, though, something different happens: no configuration is stable against *all* small perturbations, so the system is forced to keep evolving — and it does so until perturbations can propagate across every length scale simultaneously. That state, with no characteristic scale left, is the critical point.
 
@@ -102,7 +97,7 @@ What this animation is really showing is the accumulation phase feeding the inst
 
 ### Emergence of scale-free avalanches (20×20)
 
-Once the lattice reaches its stationary regime, avalanches of every size coexist: most are small, a few sweep across large portions of the grid, and — crucially — there's no size that's more "typical" than another.
+Once the lattice reaches its stationary regime, avalanches of every size coexist: most are small, a few sweep across large portions of the grid, and there's no size that's more "typical" than another.
 
 <p align="center">
 <img src="figures/20x20x20_Dt.png" width="31%">
@@ -123,7 +118,7 @@ To reduce finite-size effects and get closer to the conditions in the original p
 </p>
 
 <p align="center">
-<i>Figure 3. Avalanche dynamics on a 50×50 lattice. The local toppling rule is unchanged — only the system size grows — yet this alone is enough for much larger cascades to appear.</i>
+<i>Figure 3. Avalanche dynamics on a 50×50 lattice. The local toppling rule is unchanged, only the system size grows, yet this alone is enough for much larger cascades to appear.</i>
 </p>
 
 <p align="center">
@@ -155,7 +150,7 @@ Getting a different exponent isn't the same as failing to reproduce the phenomen
 
 BTW's model raises an obvious question once you take it seriously: if criticality normally requires tuning a parameter precisely (as in ordinary phase transitions), how could a biological system like the brain sit near a critical point without anyone — or anything — tuning it from the outside?
 
-This is exactly the question that motivated Levina, Herrmann & Geisel (2007). Cortical recordings had already shown **neuronal avalanches** — bursts of activity with power-law size distributions, reminiscent of sandpile avalanches — but the earlier models that reproduced them needed a global connectivity parameter fixed at one very specific value to stay critical. That's the opposite of self-organization: it's fine-tuning by the experimenter, not an emergent property of the system. Levina et al. asked whether a more biologically realistic ingredient — synapses whose strength changes with use — could turn criticality from a fragile coincidence into a robust, self-organizing outcome.
+This is exactly the question that motivated Levina, Herrmann & Geisel (2007). Cortical recordings had already shown **neuronal avalanches**, bursts of activity with power-law size distributions, reminiscent of sandpile avalanches, but the earlier models that reproduced them needed a global connectivity parameter fixed at one very specific value to stay critical. That's the opposite of self-organization: it's fine-tuning by the experimenter, not an emergent property of the system. Levina et al. asked whether a more biologically realistic ingredient — synapses whose strength changes with use — could turn criticality from a fragile coincidence into a robust, self-organizing outcome.
 
 ---
 
@@ -168,9 +163,9 @@ Each synaptic connection `J_ij` isn't fixed — it follows Tsodyks–Markram-sty
 - When a presynaptic spike arrives, the synapse consumes a fraction `u` of its available "resource" (loosely, neurotransmitter), and its effective strength drops.
 - While the presynaptic neuron stays silent, the synapse **slowly recovers** back toward its maximal strength, on a timescale much slower than a single spike.
 
-This is precisely the BTW loop again, just relabeled: the **slow drive** is external input pushing membrane potentials toward threshold; the **local accumulation** is synaptic resource recovering between spikes; the **threshold instability** is the neuron firing once its potential crosses `θ`; and the **fast relaxation** is the avalanche of spikes it can trigger downstream, which depletes synaptic resources and — like a sandpile toppling — pulls the network back into a locally quieter state.
+This is precisely the BTW loop again, just relabeled: the **slow drive** is external input pushing membrane potentials toward threshold; the **local accumulation** is synaptic resource recovering between spikes; the **threshold instability** is the neuron firing once its potential crosses `θ`; and the **fast relaxation** is the avalanche of spikes it can trigger downstream, which depletes synaptic resources and, like a sandpile toppling, pulls the network back into a locally quieter state.
 
-The network is different from a sandpile in real ways: it isn't spatially local (in the fully-connected version, any neuron can affect any other), and what's conserved isn't a physical quantity like sand but a resource budget bounded by the parameter `α` (the maximal synaptic strength). This is exactly why it's a good second case study rather than a redundant one: it shows that the BTW mechanism doesn't depend on a 2D lattice, or on grains, or on strict local conservation — what's essential is the slow-accumulation / fast-threshold-release loop, and dynamical synapses reproduce that loop with completely different biological machinery. The paper's central analytical result is that this reproduces the loop *robustly*: the mean-field self-consistency equations for average synaptic strength and inter-spike interval show that, in the large-network limit, the network is critical for essentially any `α ≥ 1` — not one exact value, which is the whole point relative to earlier fine-tuned models.
+The network is different from a sandpile in real ways: it isn't spatially local (in the fully-connected version, any neuron can affect any other), and what's conserved isn't a physical quantity like sand but a resource budget bounded by the parameter `α` (the maximal synaptic strength). This is exactly why it's a good second case study rather than a redundant one: it shows that the BTW mechanism doesn't depend on a 2D lattice, or on grains, or on strict local conservation, what's essential is the slow-accumulation / fast-threshold-release loop, and dynamical synapses reproduce that loop with completely different biological machinery. The paper's central analytical result is that this reproduces the loop *robustly*: the mean-field self-consistency equations for average synaptic strength and inter-spike interval show that, in the large-network limit, the network is critical for essentially any `α ≥ 1` — not one exact value, which is the whole point relative to earlier fine-tuned models.
 
 ---
 
@@ -211,7 +206,7 @@ The point of putting these side by side isn't that the two systems are "the same
 
 ## Discussion and limitations
 
-Both reproductions capture the qualitative signatures the original papers are known for — power-law avalanche statistics with no obvious size cutoff except system size, and (for Levina) a genuinely parameter-*insensitive* critical region rather than a knife-edge one. Neither reproduction should be read as a precision replication of the original figures: exponents drift somewhat from the published values, mostly for reasons that are well understood (finite system size, fitting-window choice, transient handling) rather than mysterious ones.
+Both reproductions capture the qualitative signatures the original papers are known for power-law avalanche statistics with no obvious size cutoff except system size, and (for Levina) a genuinely parameter-*insensitive* critical region rather than a knife-edge one. Neither reproduction should be read as a precision replication of the original figures: exponents drift somewhat from the published values, mostly for reasons that are well understood (finite system size, fitting-window choice, transient handling) rather than mysterious ones.
 
 What I'd flag as the more interesting open work, if I kept extending this:
 
