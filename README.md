@@ -57,9 +57,9 @@ Slow accumulation and fast relaxation allow the system to alternate between peri
 
 ## 1. The Bak-Tang-Wiesenfeld sandpile
 
-This 1987 paper wasn't primarily about sandpiles, it was an attempt to explain the ubiquity of **1/f noise**, the puzzling power-law power spectrum observed in everything from resistors to the flow of the Nile. Sand is just the clearest way to make the argument concrete.
+This 1987 paper wasn't primarily about sandpiles, it was an attempt to explain the ubiquity of **1/f noise**, observed in cortical activity, financial time series, wildfire dynamics, earthquakes, and numerous other complex systems. Sand is simply the most transparent model for understanding the universal mechanisms behind these scaling laws.
 
-The paper actually starts with a simpler picture: a 1D chain of damped pendula connected by torsion springs. Kicking one pendulum can trigger a chain reaction through its neighbors, and the authors show that in one dimension this settles into a trivial, stable configuration. In two or more dimensions, though, something different happens. No configuration is stable against all small perturbations, so the system is forced to keep evolving, and it does so until perturbations can propagate across every length scale simultaneously. That state, with no characteristic scale left, is the critical point.
+The paper actually starts with a simpler picture, with a 1D chain of damped pendula connected by torsion springs. Kicking one pendulum can trigger a chain reaction through its neighbors, and the authors show that in one dimension this settles into a trivial, stable configuration. In two or more dimensions, though, something different happens. No configuration is stable against all small perturbations, so the system is forced to keep evolving, and it does so until perturbations can propagate across every length scale simultaneously. That state, with no characteristic scale left, is the critical point.
 
 The cellular-automaton version used for simulation keeps the same physics with an integer height variable `z(x,y)` on a lattice:
 
@@ -125,9 +125,9 @@ The same qualitative behavior is also observed in the three-dimensional simulati
 <i>Figure 4. Avalanche duration (left), avalanche size (center), and fractal dimension (right) for the 20×20×20 lattice.</i>
 </p>
 
-Overall, the reproduced dynamics agree well with the behavior described in the original paper. The fitted exponents, however, are not identical to the published values. Bak, Tang & Wiesenfeld reported a cluster-size exponent of approximately `τ ≈ 0.98` for the 50×50 lattice and `τ ≈ 1.35` for the 20×20×20 system, together with lifetime exponents of `α ≈ 0.42` in two dimensions and `α ≈ 0.90` in three dimensions.
+Overall, the reproduced dynamics agree well with the behavior described in the original paper. The estimated scaling exponents for the avalanche size and avalanche duration distributions, however, are not identical to the published values. Bak, Tang & Wiesenfeld reported an avalanche-size exponent of approximately `τ ≈ 0.98` for the 50×50 lattice and `τ ≈ 1.35` for the 20×20×20 system, together with avalanche-duration exponents of `α ≈ 0.42` in two dimensions and `α ≈ 0.90` in three dimensions.
 
-These lifetime exponents are particularly interesting because they connect avalanche dynamics with the widespread appearance of **1/f noise**. Using the relationship derived by the authors, the two-dimensional value `α ≈ 0.42` corresponds to a power spectrum close to `f^{-1.58}`, remarkably similar to the power-law spectra observed in many physical systems. In other words, a simple lattice of falling sand reproduces not only scale-free avalanches but also statistical properties associated with 1/f noise.
+These **avalanche-duration exponents** are particularly interesting because they are directly related to the exponent of the system's **power spectrum**. Using the relationship derived by the authors, the two-dimensional avalanche-duration exponent (`α ≈ 0.42`) predicts a power spectrum close to `S(f) ∝ f^{-1.58}`, remarkably similar to the ubiquitous 1/f noise observed in many natural systems. In other words, the sandpile model reproduces not only scale-free avalanche statistics but also the long-range temporal correlations reflected in its power spectrum.
 
 Obtaining different exponents does not necessarily indicate a failed reproduction. The exact numerical value of the exponent is often less important than its relative changes across different conditions. In both experiments and simulations, power-law exponents are primarily used to compare how system dynamics evolve, while the emergence of scale-free behavior remains the defining signature of criticality.
 
@@ -136,15 +136,19 @@ Obtaining different exponents does not necessarily indicate a failed reproductio
 
 ## 3. From sandpiles to the brain
 
-BTW's model raises an obvious question once you take it seriously: if criticality normally requires tuning a parameter precisely (as in ordinary phase transitions), how could a biological system like the brain sit near a critical point without anyone — or anything — tuning it from the outside?
+The implications of Bak, Tang and Wiesenfeld's work extend far beyond piles of sand, raising a broader question: could the same principles govern biological systems?
 
-This is exactly the question that motivated Levina, Herrmann & Geisel (2007). Cortical recordings had already shown **neuronal avalanches**, bursts of activity with power-law size distributions, reminiscent of sandpile avalanches, but the earlier models that reproduced them needed a global connectivity parameter fixed at one very specific value to stay critical. That's the opposite of self-organization: it's fine-tuning by the experimenter, not an emergent property of the system. Levina et al. asked whether a more biologically realistic ingredient — synapses whose strength changes with use — could turn criticality from a fragile coincidence into a robust, self-organizing outcome.
+Evidence soon began to emerge. Linkenkaer-Hansen *et al.* (2001) reported that spontaneous brain activity exhibits *1/f-like power spectra and long-range temporal correlations, while Beggs & Plenz (2003) later discovered neuronal avalanches with approximately power-law size distributions. Together, these findings suggested that cortical dynamics might operate near a critical state.
+
+Yet an important question remained. The brain is vastly more complex than a lattice of sand grains, containing billions of neurons connected through dynamic synapses. How could such a system spontaneously organize itself near criticality without requiring precise parameter tuning?
+
+This is precisely the problem addressed by **Levina, Herrmann & Geisel (2007)**. They showed that a simple network of integrate-and-fire neurons equipped with **activity-dependent dynamic synapses** naturally self-organizes toward a critical regime, providing a biologically plausible mechanism linking the universal principles introduced by Bak, Tang & Wiesenfeld to neuronal avalanches observed in cortical networks.
 
 ---
 
 ## 4. Levina, Herrmann & Geisel: dynamical synapses
 
-The network is a set of `N` integrate-and-fire neurons: each neuron accumulates input in its membrane potential and fires a spike once it crosses a threshold, resetting afterward. So far this has nothing to do with sand. The part that reconnects it to BTW is the synapse model.
+The network is a set of `N` integrate-and-fire neurons. Each neuron accumulates input in its membrane potential and fires a spike once it crosses a threshold, resetting afterward. The part that reconnects it to BTW is the synapse model.
 
 Each synaptic connection `J_ij` isn't fixed — it follows Tsodyks–Markram-style short-term depression:
 
