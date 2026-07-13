@@ -87,19 +87,19 @@ To build intuition for the dynamics, grains are repeatedly dropped onto the cent
 
 Starting from a completely stable state, the system gradually builds up height around the driven region. Early perturbations produce small, local rearrangements, but each avalanche redistributes grains and leaves nearby sites closer to instability. As the accumulated structure expands, a small addition can trigger cascades that travel increasingly farther through the lattice. 
 
-### Large-scale dynamics and avalanche statistics (50×50)
+### Large-scale dynamics and avalanche statistics (50×50) & (20×20×20)
 
-To study the scaling behavior described in the original paper, the lattice was increased to **50×50**. A larger system size allows avalanches to develop over a wider range of spatial and temporal scales.
+To better reproduce the results reported by Bak, Tang & Wiesenfeld, the lattice size was increased to **50×50**. A larger lattice reduces finite-size effects and gives avalanches more room to propagate, making the scale-free behavior easier to observe.
 
 <p align="center">
 <img src="figures/sand_50x50.gif" width="600">
 </p>
 
 <p align="center">
-<i>Figure 2. Avalanche dynamics on a 50×50 lattice. </i>
+<i>Figure 2. Avalanche dynamics on a 50×50 lattice.</i>
 </p>
 
-Once the system reaches its stationary regime, avalanche statistics are collected and compared with the scaling laws reported by Bak, Tang & Wiesenfeld. The absence of a characteristic avalanche size is reflected in the approximate power-law distributions of avalanche size, duration, and fractal dimension.
+After initializing the lattice with randomly distributed grains, avalanche statistics were collected over the course of the simulation. The resulting distributions of avalanche duration, size, and power spectrum are shown below.
 
 <p align="center">
 <img src="figures/50x50_Dt.png" width="31%">
@@ -108,8 +108,30 @@ Once the system reaches its stationary regime, avalanche statistics are collecte
 </p>
 
 <p align="center">
-<i>Figure 3. Avalanche duration (left), size (center), and fractal dimension (right) for the 50×50 lattice. The broad scaling regions reflect the coexistence of avalanches across multiple spatial and temporal scales.</i>
+<i>Figure 3. Avalanche duration (left), avalanche size (center), and power spectrum (right) for the 50×50 lattice.</i>
 </p>
+
+Rather than clustering around a typical value, avalanches span many orders of magnitude. Small events occur frequently, larger cascades become progressively rarer, and no characteristic scale dominates the dynamics. This broad range of avalanche sizes is one of the defining signatures of self-organized criticality and is best reflected in log-log distribution.
+
+The same qualitative behavior is also observed in the three-dimensional simulation.
+
+<p align="center">
+<img src="figures/20x20x20_Dt.png" width="31%">
+<img src="figures/20x20x20_Ds.png" width="31%">
+<img src="figures/20x20x20_Df.png" width="31%">
+</p>
+
+<p align="center">
+<i>Figure 4. Avalanche duration (left), avalanche size (center), and fractal dimension (right) for the 20×20×20 lattice.</i>
+</p>
+
+Overall, the reproduced dynamics agree well with the behavior described in the original paper. The fitted exponents, however, are not identical to the published values. Bak, Tang & Wiesenfeld reported a cluster-size exponent of approximately `τ ≈ 0.98` for the 50×50 lattice and `τ ≈ 1.35` for the 20×20×20 system, together with lifetime exponents of `α ≈ 0.42` in two dimensions and `α ≈ 0.90` in three dimensions.
+
+These lifetime exponents are particularly interesting because they connect avalanche dynamics with the widespread appearance of **1/f noise**. Using the relationship derived by the authors, the two-dimensional value `α ≈ 0.42` corresponds to a power spectrum close to `f^{-1.58}`, remarkably similar to the power-law spectra observed in many physical systems. In other words, a simple lattice of falling sand reproduces not only scale-free avalanches but also statistical properties associated with 1/f noise.
+
+Obtaining different exponents does not necessarily indicate a failed reproduction. The exact numerical value of the exponent is often less important than its relative changes across different conditions. In both experiments and simulations, power-law exponents are primarily used to compare how system dynamics evolve, while the emergence of scale-free behavior remains the defining signature of criticality.
+
+
 ---
 
 ## 3. From sandpiles to the brain
